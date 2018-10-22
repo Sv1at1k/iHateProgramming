@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LeafManager {
-	private String file;
+	private String fsile;
 	private int width;
 	private int height;
 	private int leafsAmount;
@@ -18,26 +18,25 @@ public class LeafManager {
 		int maxLeafsWidth = probablyAnswer / width;
 		int maxLeafsHeight = probablyAnswer / height;
 		while (maxLeafsWidth * maxLeafsHeight < leafsAmount) {
-		int ñubesToFitWidth =  width - probablyAnswer%width;
-		int ñubesToFitHeight =   height - probablyAnswer%height;
-		if(ñubesToFitWidth < ñubesToFitHeight){
-			probablyAnswer = probablyAnswer +  ñubesToFitWidth;
-			maxLeafsWidth = probablyAnswer / width;
-			maxLeafsHeight = probablyAnswer / height;
+			int ñubesToFitWidth = width - probablyAnswer % width;
+			int ñubesToFitHeight = height - probablyAnswer % height;
+			if (ñubesToFitWidth < ñubesToFitHeight) {
+				probablyAnswer = probablyAnswer + ñubesToFitWidth;
+				maxLeafsWidth = probablyAnswer / width;
+				maxLeafsHeight = probablyAnswer / height;
 
-			} else if (ñubesToFitHeight < ñubesToFitWidth){
+			} else if (ñubesToFitHeight < ñubesToFitWidth) {
 				probablyAnswer = probablyAnswer + ñubesToFitHeight;
 				maxLeafsWidth = probablyAnswer / width;
 				maxLeafsHeight = probablyAnswer / height;
 
-			
-			}else {
+			} else {
 				probablyAnswer = probablyAnswer + 1;
 				maxLeafsWidth = probablyAnswer / width;
 				maxLeafsHeight = probablyAnswer / height;
 
 			}
-			}
+		}
 		System.out.println("Answer is " + probablyAnswer);
 	}
 
@@ -50,7 +49,7 @@ public class LeafManager {
 
 	private String readFromFile() {
 		String readedString = new String("");
-		try (FileReader fileReader = new FileReader(file)) {
+		try (FileReader fileReader = new FileReader(fsile)) {
 			Scanner scan = new Scanner(fileReader);
 
 			while (scan.hasNextLine()) {
@@ -70,7 +69,7 @@ public class LeafManager {
 
 	public LeafManager(String file) {
 
-		this.file = file;
+		this.fsile = file;
 	}
 
 }
