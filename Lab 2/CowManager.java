@@ -10,85 +10,94 @@ public class CowManager {
 	private String file;
 	private int cowsAmount;
 	private int angryCows;
-	String[] data;
+	List<Integer> cages = new ArrayList<Integer>();
+	List<Integer> angryCages = new ArrayList<Integer>();
+	List<Integer> distanceBetweenAngryCows = new ArrayList<Integer>();
 
-	public Integer calculate() {
-		String[] data = readFromFile().split(" ");
-		Integer[] corralNumber = setDataToCalculate(data);
-		sortAvailableCorrals(corralNumber);
-		List<Integer> suitableCorralsList = filter(corralNumber);
-		List<Integer> distanceBetweenAngryCowsList = getDistanceBetweenAngryCows(suitableCorralsList);
-		return (Integer) sortDistanceBetweenAngryCows(distanceBetweenAngryCowsList).get(0);
-	}
+	public void calculate() {
+		setDataToCalculate(readFromFile());
+		sort(cages);
+		System.out.println("Sorted cages");
+		for (Integer i : cages) {
+			System.out.println(i);
 
-	private Integer[] setDataToCalculate(String[] data) {
-		Integer[] corralNumber = new Integer[data.length - 2];
-		setCowsAmount(Integer.parseInt(data[0]));
-		setAngryCows(Integer.parseInt(data[1]));
-		for (int iterator = 2; iterator < data.length; iterator++) {
-			corralNumber[iterator - 2] = Integer.parseInt(data[iterator]);
-		}
-		return corralNumber;
-
-	}
-
-	private List<Integer> filter(Integer[] sortedCorralNumber) {
-		List<Integer> filteredList = new ArrayList<Integer>();
-		for (Integer i : sortedCorralNumber) {
-			filteredList.add(i);
 		}
 
-		for (int i = 1; i < filteredList.size(); i++) {
-			if (filteredList.get(i) - filteredList.get(i - 1) == 1) {
+		setAngryCows();
 
-				filteredList.remove(i);
+		sort(angryCages);
+
+		System.out.println("Cages for angry cows");
+
+		for (Integer i : angryCages) {
+
+			System.out.println(i);
+		}
+
+		getDistanceBetweenAngryCows();
+
+		sort(distanceBetweenAngryCows);
+
+		System.out.println("Answer is:");
+
+		System.out.println(distanceBetweenAngryCows.get(1));
+
+	}
+
+	private void getDistanceBetweenAngryCows() {
+		for (int i = 0; i < angryCages.size() - 1; i++) {
+			distanceBetweenAngryCows.add(angryCages.get(i + 1) - angryCages.get(i));
+		}
+
+	}
+
+	private void setAngryCows() {
+		if (angryCows == 2) {
+			angryCages.add(cages.get(0));
+			angryCages.add(cages.get(cages.size() - 1));
+			for (Integer i : angryCages) {
+				System.out.println(i);
 			}
 
-		}
+		} else if (angryCows > 2) {
+			angryCages.add(cages.get(0));
+			angryCages.add(cages.get(cages.size() - 1));
 
-		return filteredList;
+			int numberOfSegments = cages.size() / (angryCows - 1);
+			for (int i = numberOfSegments; i < cages.size() - 1; i = i + numberOfSegments) {
+				if (angryCages.size() == angryCows) {
+					break;
+				}
+				angryCages.add(cages.get(i));
+
+			}
+
+		} else {
+			System.out.println("Місця достатньо");
+
+		}
 
 	}
 
-	private List<Integer> getDistanceBetweenAngryCows(List<Integer> filteredList) {
-		List<Integer> distanceBetweenCows = new ArrayList<Integer>();
-		for (int i = 1; i < filteredList.size(); i++) {
-			Integer distanceBetweenClosestCows = filteredList.get(i) - filteredList.get(i - 1);
-			distanceBetweenCows.add(distanceBetweenClosestCows);
-
-		}
-
-		return distanceBetweenCows;
-
-	}
-
-	private Integer[] sortAvailableCorrals(Integer[] corralNumber) {
-
-		for (int i = 0; i < corralNumber.length; i++)
-			for (int j = 1; j < corralNumber.length - i; j++) {
-				if (corralNumber[j - 1] > corralNumber[j]) {
-					int trash = corralNumber[j - 1];
-					corralNumber[j - 1] = corralNumber[j];
-					corralNumber[j] = trash;
-
+	private void sort(List<Integer> list) {
+		int listSize = list.size();
+		for (int i = 0; i < listSize - 1; i++)
+			for (int j = 0; j < listSize - i - 1; j++)
+				if (list.get(j) > list.get(j + 1)) {
+					Collections.swap(list, j, j + 1);
 				}
 
-			}
-
-		return corralNumber;
 	}
 
-	private List sortDistanceBetweenAngryCows(List<Integer> distanceBetweenAngryCowsList) {
+	private void setDataToCalculate(String data) {
+		String[] dataArray = data.split(" ");
+		this.cowsAmount = Integer.parseInt(dataArray[0]);
+		this.angryCows = Integer.parseInt(dataArray[1]);
+		for (int i = 2; i < dataArray.length; i++) {
+			cages.add(Integer.parseInt(dataArray[i]));
 
-		for (int i = 0; i < distanceBetweenAngryCowsList.size(); i++)
-			for (int j = 1; j < distanceBetweenAngryCowsList.size() - i; j++) {
-				if (distanceBetweenAngryCowsList.get(j - 1) > distanceBetweenAngryCowsList.get(j)) {
-					Collections.swap(distanceBetweenAngryCowsList, j - 1, j);
-				}
+		}
 
-			}
-
-		return distanceBetweenAngryCowsList;
 	}
 
 	private String readFromFile() {
